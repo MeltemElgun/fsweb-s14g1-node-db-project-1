@@ -16,7 +16,8 @@ WHERE SupplierID=11 ;
 -- Verilen ilk 10 siparişi, sipariş tarihine göre azalan şekilde listeleyin
 SELECT * 
 FROM [Orders]
-ORDER BY OrderDate DESC;
+ORDER BY OrderDate DESC
+Limit 10;
 
 -- Londra, Madrid veya Brezilya'da yaşayan tüm müşterileri bulun
 SELECT *
