@@ -20,6 +20,10 @@ const create = (account) => {
     });
 };
 
+const checkName = (name) => {
+  let nameExist = db.find((item) => item.name === name);
+  return !!nameExist;
+};
 const updateById = (id, account) => {
   // KODLAR BURAYA
   return db("accounts")
@@ -41,4 +45,5 @@ module.exports = {
   create,
   updateById,
   deleteById,
+  checkName,
 };
