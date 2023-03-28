@@ -7,7 +7,7 @@ const {
 } = require("../accounts/accounts-middleware");
 
 const accountModel = require("./accounts-model");
-router.get("/", async (req, res, next) => {
+router.get("/", logger, async (req, res, next) => {
   // KODLAR BURAYA
   try {
     let allAccounts = await accountModel.getAll();
@@ -52,7 +52,7 @@ router.put(
         req.params.id,
         req.payloadAccounts
       );
-      req.status(201).json(updateAcounts);
+      res.status(200).json(updateAcounts);
     } catch (error) {
       next(error);
     }

@@ -21,29 +21,23 @@ exports.logger = (req, res, next) => {
   next();
 };
 
-exports.checkAccountPayload = (req, res, next) => {
+exports.checkAccountPayload = async (req, res, next) => {
   // KODLAR BURAYA
   // Not: Validasyon için Yup(şu an yüklü değil!) kullanabilirsiniz veya kendiniz manuel yazabilirsiniz.
   try {
     let { name, budget } = req.body;
-    let isValidLengthName = name.trim().length < 3 || name.length > 100;
-    let isValidbudget = parseInt(budget) > 1000000 || parseInt(budget) < 0;
+    let isValidLengthName =  name !== undefined && name.trim().length >= 3 && name.trim().length <= 100;
+    let isValidbudget = budget !== undefined && (parseInt(budget) > 1000000 || parseInt(budget) < 0);
     let isValidbudgetNumber = isNaN(parseInt(budget));
 
-    if (!name || !budget) {
+    if (name === undefined || budget === undefined) {
       return res.status(400).json({ message: "name and budget are required" });
-    } else if (isValidLengthName) {
-      return res
-        .status(400)
-        .json({ message: "name of account must be between 3 and 100" });
+    } else if (!isValidLengthName) {
+      return res.status(400).json({ message: "name of account must be between 3 and 100" });
     } else if (isValidbudgetNumber) {
-      return res
-        .status(400)
-        .json({ message: "budget of account must be a number" });
+      return res.status(400).json({ message: "budget of account must be a number" });
     } else if (isValidbudget) {
-      return res
-        .status(400)
-        .json({ message: "budget of account is too large or too small" });
+      return res.status(400).json({ message: "budget of account is too large or too small" });
     } else {
       req.payloadAccounts = {
         name: name.trim(),
@@ -60,8 +54,8 @@ exports.checkAccountNameUnique = async (req, res, next) => {
   // KODLAR BURAYA
   try {
     const { name } = req.body;
-    const isName = !!name && accountModel.checkName(name);
-    if (name) {
+    const isName = !!name && (await accountModel.checkName(name));
+    if (isName) {
       res.status(400).json({ message: "that name is taken" });
     } else {
       next();

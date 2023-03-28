@@ -20,8 +20,8 @@ const create = (account) => {
     });
 };
 
-const checkName = (name) => {
-  let nameExist = db.find((item) => item.name === name);
+const checkName = async (name) => {
+  let nameExist = await db("accounts").where("name", name).first();
   return !!nameExist;
 };
 const updateById = (id, account) => {
